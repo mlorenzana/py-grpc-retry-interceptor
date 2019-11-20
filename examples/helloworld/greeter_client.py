@@ -18,8 +18,8 @@ import logging
 
 import grpc
 
-from . import helloworld_pb2
-from . import helloworld_pb2_grpc
+import helloworld_pb2
+import helloworld_pb2_grpc
 
 import retry_interceptor
 
@@ -29,7 +29,7 @@ def run():
     # of the code.
     with grpc.insecure_channel('localhost:50051') as channel:
 
-        channel = grpc.insecure_channel(channel, retry_interceptor.RetryInterceptor())
+        channel = grpc.intercept_channel(channel, retry_interceptor.RetryInterceptor())
 
         stub = helloworld_pb2_grpc.GreeterStub(channel)
         response = stub.SayHello(helloworld_pb2.HelloRequest(name='you'))
