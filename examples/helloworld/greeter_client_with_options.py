@@ -18,8 +18,8 @@ import logging
 
 import grpc
 
-from . import helloworld_pb2
-from . import helloworld_pb2_grpc
+import helloworld_pb2
+import helloworld_pb2_grpc
 
 import retry_interceptor
 
@@ -35,7 +35,7 @@ def run():
                      ('grpc.enable_retries', 0), ('grpc.keepalive_timeout_ms',
                                                   10000)]) as channel:
 
-        channel = grpc.insecure_channel(channel, retry_interceptor.RetryInterceptor())
+        channel = grpc.intercept_channel(channel, retry_interceptor.RetryInterceptor())
 
         stub = helloworld_pb2_grpc.GreeterStub(channel)
         # Timeout in seconds.
