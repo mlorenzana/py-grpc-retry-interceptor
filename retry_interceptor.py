@@ -13,6 +13,9 @@ class RetryInterceptor(UnaryUnaryClientInterceptor, UnaryStreamClientInterceptor
         self.retry_timeout_ms = retry_timeout_ms
         self.retry_jitter_ms = retry_jitter_ms
 
+        if self.retry_jitter_ms > self.retry_timeout_ms:
+            raise ValueError('retry_jitter_ms cannot be greater than retry_timeout_ms')
+
     def _next_retry_timeout_seconds(self):
         ms_timeout = self.retry_timeout_ms + (random.randint(-1, 1) * self.retry_jitter_ms)
         s_timeout = ms_timeout / 1000
